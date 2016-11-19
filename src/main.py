@@ -2,7 +2,7 @@ import django
 from untitled.settings import DATABASES
 
 
-def print_hui():
+def print_hui(*args, **kwargs):
     print("Hui!")
 
 if __name__ == '__main__':
