@@ -1,5 +1,6 @@
 import django
 from untitled.settings import DATABASES
+from django.http import HttpResponse
 
 class superstr():
     def __init__(self, string=''):
@@ -7,11 +8,11 @@ class superstr():
 
     def get(self):
         return self.string
-        
 
-def hello(*args, **kwargs):
+
+def hello(request):
     #print("Hello world!")
-    return '<h>Hello</h>'
+    return HttpResponse
 
 if __name__ == '__main__':
     print("server")
