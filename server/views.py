@@ -30,7 +30,11 @@ def getUsers(request):
         response = serializers.serialize('json', mod.Member.objects.all(), fields=('first_name', 'last_name'))
 
         d = json.loads(response)
-        print(d)
-        return JsonResponse(d, safe=False)
+
+        # print(d)
+        data = [x['fields'] for x in d]
+        # print(data)
+        # print(dict(data))
+        return JsonResponse(data, safe=False)
         # return HttpResponse(simplejson.dumps(response.replace('\"', '\'')), mimetype='application/json')
 
