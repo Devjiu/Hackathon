@@ -27,12 +27,21 @@ def login(request):
 
 def getUsers(request):
     if request.method == 'GET':
-        response = serializers.serialize('json', mod.Member.objects.all(), fields=('first_name', 'last_name'))
+        response = serializers.serialize('json',
+                                         mod.Member.objects.all(),
+                                         fields=('first_name', 'last_name', 'member_id'))
 
         d = json.loads(response)
-
+        # print(d)
         # print(d)
         data = [x['fields'] for x in d]
+        print("data : ", data)
+        for instance in data:
+            # print("instance = ", instance)
+            print(instance['member_id'])
+            inter = mod.MemberInterest.objects.get(member_id=instance['member_id'])
+            skill = mod.MemberSkills.objects.get(member_id=instance['member_id'])
+
         # print(data)
         # print(dict(data))
         return JsonResponse(data, safe=False)
