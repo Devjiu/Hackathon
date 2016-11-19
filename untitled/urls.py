@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from src.main import print_hui
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^print_hui/', print_hui),
 ]
