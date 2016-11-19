@@ -4,15 +4,15 @@ from django.http import Http404
 import json
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
-# Create your views here.
+#def index(request):
+#    return HttpResponse("Hello, world. You're at the polls index.")
 
 def login(request):
+    print("FUCK")
     if request.method == 'POST':
-        received_data = json.load(request.POST['login','password'])
-
+        #print(request.body, dict(request.body))
+        received_data = json.loads(request.body.decode('utf-8'))
+        # return HttpResponse(st)
+        print(dict(received_data))
         return HttpResponse(str(received_data))
-
     return Http404
