@@ -9,11 +9,13 @@ def index(request):
 
 # Create your views here.
 
-
 def login(request):
+    print("FUCK")
     if request.method == 'POST':
-        received_data = json.loads(request.body)
-
+        #print(request.body, dict(request.body))
+        received_data = json.loads(request.body.decode('utf-8'))
+        # return HttpResponse(st)
+        print(dict(received_data))
         return HttpResponse(str(received_data))
 
     return Http404
