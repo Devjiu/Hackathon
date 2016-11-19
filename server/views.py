@@ -48,8 +48,16 @@ def getUsers(request):
             print(skills)
 
             if instance['member_id'] == skills['member_id']:
-                for skill in skills:
-                    instance[skill] = skills[skill]
+                # for skill in skills:
+                #     instance[skill] = skills[skill]
+                to_delete = []
+                for key in skills:
+                    if skills[key] == '' or key == 'member_id':
+                        to_delete.append(key)
+
+                for key in to_delete:
+                    skills.pop(key)
+                instance['skills'] = skills
 
             """ Add interests """
 
@@ -58,11 +66,19 @@ def getUsers(request):
                                          fields=('interest1', 'interest2', 'interest3', 'interest4', 'interest5', 'member_id'))
             interests = json.loads(resp)
             interests = [x['fields'] for x in interests][0]
-            print(interests)
+            print("interests : ", interests)
 
             if instance['member_id'] == interests['member_id']:
-                for interest in interests:
-                    instance[interest] = interests[interest]
+                # for interest in interests:
+                #     instance[interest] = interests[interest]
+                to_delete = []
+                for key in interests:
+                    if interests[key] == '' or key == 'member_id':
+                        to_delete.append(key)
+                # interests.pop('member_id')
+                for key in to_delete:
+                    interests.pop(key)
+                instance['interests'] = interests
 
         # print(data)
         # print(dict(data))
