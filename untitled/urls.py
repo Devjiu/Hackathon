@@ -19,6 +19,5 @@ from src.main import hello
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^polls/', include('server.urls')),
-    url(r'^print_hui/', hello),
+    url(r'^hello/', hello),
 ]
