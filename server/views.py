@@ -34,6 +34,7 @@ def getUsers(request):
         d = json.loads(response)
         # print(d)
         # print(d)
+        # print(d)
         data = [x['fields'] for x in d]
         print("data : ", data)
         for instance in data:
