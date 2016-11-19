@@ -2,8 +2,9 @@ import django
 from untitled.settings import DATABASES
 
 
-def print_hui(*args, **kwargs):
-    print("Hui!")
+def hello(*args, **kwargs):
+    #print("Hello world!")
+    return '<h>Hello</h>'
 
 if __name__ == '__main__':
     print("server")
