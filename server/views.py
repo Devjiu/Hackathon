@@ -9,9 +9,10 @@ def index(request):
 
 # Create your views here.
 
+
 def login(request):
     if request.method == 'POST':
-        received_data = json.load(request.POST['login','password'])
+        received_data = json.loads(request.body)
 
         return HttpResponse(str(received_data))
 
