@@ -39,9 +39,30 @@ def getUsers(request):
         print("data : ", data)
         for instance in data:
             # print("instance = ", instance)
-            print(instance['member_id'])
-            inter = mod.MemberInterest.objects.get(member_id=instance['member_id'])
-            skill = mod.MemberSkills.objects.get(member_id=instance['member_id'])
+            """ Add skills """
+            resp = serializers.serialize('json',
+                                           mod.MemberSkills.objects.all(),
+                                           fields=('skill1','skill2', 'skill3', 'skill4', 'skill5', 'member_id'))
+            skills = json.loads(resp)
+            skills = [x['fields'] for x in skills][0]
+            print(skills)
+
+            if instance['member_id'] == skills['member_id']:
+                for skill in skills:
+                    instance[skill] = skills[skill]
+
+            """ Add interests """
+
+            resp = serializers.serialize('json',
+                                         mod.MemberInterest.objects.all(),
+                                         fields=('interest1', 'interest2', 'interest3', 'interest4', 'interest5', 'member_id'))
+            interests = json.loads(resp)
+            interests = [x['fields'] for x in interests][0]
+            print(interests)
+
+            if instance['member_id'] == interests['member_id']:
+                for interest in interests:
+                    instance[interest] = interests[interest]
 
         # print(data)
         # print(dict(data))
