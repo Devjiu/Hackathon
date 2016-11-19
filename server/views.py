@@ -5,6 +5,8 @@ from django.http import Http404
 from django.core import serializers
 from django.http import JsonResponse
 
+# from django.utils import simplejson
+
 import json
 import server.models as mod
 
@@ -27,5 +29,8 @@ def getUsers(request):
     if request.method == 'GET':
         response = serializers.serialize('json', mod.Member.objects.all(), fields=('first_name', 'last_name'))
 
-        print(response.replace('\"', '\''))
-        return JsonResponse(response.replace('\"', '\''), safe=False)
+        d = json.loads(response)
+        print(d)
+        return JsonResponse(d, safe=False)
+        # return HttpResponse(simplejson.dumps(response.replace('\"', '\'')), mimetype='application/json')
+
