@@ -142,12 +142,55 @@ def getLabs(request):
     return Http404
 
 
-def getLabUsers(request, idx):
-    print("hello")
+def _getUserSkills(user_id):
+    """ Returns dict of skills """
+    print("---------------------------")
+
+    print("gettin user skills id = ", user_id)
+    skills = mod.MemberSkills.objects.filter(member_id=int(user_id))
+    skills = serializers.serialize('json', skills, fields=('member_id', 'skill1','skill2', 'skill3', 'skill4', 'skill5'))
+    skills = json.loads(skills)
+    result = []
+    if len(skills):
+        result=  [x['fields'] for x in skills][0]
+        print(result)
+        to_delete = []
+        for key in result:
+            if result[key] == '' or key == 'member_id':
+                to_delete.append(key)
+
+        for key in to_delete:
+            result.pop(key)
+
+    print("result : ", result)
+    print("---------------------------")
+    return result
+
+
+
+def getLabUsers(request):
     if request.method == 'GET':
-        users = mod.Crossings.filter(project_id=idx)
-        print("id = ", idx)
-        print(users)
+        req = dict(request.GET)
+        print(req)
+        users = mod.Crossings.objects.filter(project_id=int(req['id'][0]))
+        users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
+        users = json.loads(users)
+        print(users[0])
+        result = []
+        if len(users):
+            users = [x['fields'] for x in users]
+
+            print(users)
+            for user in users:
+                # tmp = mod.Member.objects.filter(member_id=user['member_id'])
+                # skills = mod.MemberSkills.objects.filter(member_id=user['member_id'])
+                # interests = mod.MemberInterest.objects.filter(member_id=user['member_id'])
+                # print(tmp, skills, interests)
+                skills = _getUserSkills(user['member_id'])
+                print(skills)
+            print("id = ", req['id'][0])
+            print(users)
+        return JsonResponse(users, safe=False)
     return Http404
 
 
