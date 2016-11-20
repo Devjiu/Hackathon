@@ -59,3 +59,9 @@ class ProjectSkills(models.Model):
     skill3      = models.CharField(max_length=100)
     skill4      = models.CharField(max_length=100)
     skill5      = models.CharField(max_length=100)
+
+class Event(models.Model):
+    name        = models.CharField(max_length=100)
+    description = models.CharField(max_length=8192)
+    event_id    = models.IntegerField()
+    time        = models.DateTimeField()
