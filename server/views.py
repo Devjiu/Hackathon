@@ -44,45 +44,10 @@ def getUsers(request):
         for instance in data:
 
             """ Add skills """
-            resp = serializers.serialize('json',
-                                           mod.MemberSkills.objects.all(),
-                                           fields=('skill1','skill2', 'skill3', 'skill4', 'skill5', 'member_id'))
-            skills = json.loads(resp)
-            if len(skills):
-                skills = [x['fields'] for x in skills][0]
-                print(skills)
-
-                if instance['member_id'] == skills['member_id']:
-
-                    to_delete = []
-                    for key in skills:
-                        if skills[key] == '' or key == 'member_id':
-                            to_delete.append(key)
-
-                    for key in to_delete:
-                        skills.pop(key)
-                    instance['skills'] = skills
+            instance['skills'] = _getUserSkills(instance['member_id'])
 
             """ Add interests """
-
-            resp = serializers.serialize('json',
-                                         mod.MemberInterest.objects.all(),
-                                         fields=('interest1', 'interest2', 'interest3', 'interest4', 'interest5', 'member_id'))
-            interests = json.loads(resp)
-            if len(interests):
-                interests = [x['fields'] for x in interests][0]
-                print("interests : ", interests)
-
-                if instance['member_id'] == interests['member_id']:
-
-                    to_delete = []
-                    for key in interests:
-                        if interests[key] == '' or key == 'member_id':
-                            to_delete.append(key)
-
-                    for key in to_delete:
-                        interests.pop(key)
-                    instance['interests'] = interests
+            instance['interests'] = _getUserInterests(instance['member_id'])
 
         return JsonResponse(data, safe=False)
     return Http404
