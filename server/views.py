@@ -406,7 +406,7 @@ def getEvents(request):
         info = json.loads(info)
         result = []
         if len(info):
-            result = [x['fields'] for x in info][0]
+            result = [x['fields'] for x in info]
 
         return JsonResponse(result, safe=False)
     return Http404
