@@ -344,7 +344,7 @@ def _getEventTech(project_id):
     tech = mod.EventTechnologies.objects.filter(project_id=int(project_id))
     tech = serializers.serialize('json', tech,
                                  fields=(
-                                     'project_id', 'tech1', 'tech2', 'tech3', 'tech4', 'tech5'))
+                                     'project_id', 'skill1', 'skill2', 'skill3', 'skill4', 'skill5'))
     tech = json.loads(tech)
     result = []
     if len(tech):
@@ -439,7 +439,7 @@ def getEvents(request):
 
         for instance in result:
             tech = _getEventTech(instance['project_id'])
-            instance['tech'] = tech
+            instance['skills'] = tech
 
         return JsonResponse(result, safe=False)
     return Http404

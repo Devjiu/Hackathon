@@ -69,8 +69,8 @@ class Event(models.Model):
 
 class EventTechnologies(models.Model):
     project_id  = models.ForeignKey(Event)
-    tech1       = models.CharField(max_length=100)
-    tech2       = models.CharField(max_length=100)
-    tech3       = models.CharField(max_length=100)
-    tech4       = models.CharField(max_length=100)
-    tech5       = models.CharField(max_length=100)
+    skill1      = models.CharField(max_length=100)
+    skill2      = models.CharField(max_length=100)
+    skill3      = models.CharField(max_length=100)
+    skill4      = models.CharField(max_length=100)
+    skill5      = models.CharField(max_length=100)
