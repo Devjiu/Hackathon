@@ -9,6 +9,8 @@ class Projects(models.Model):
 class Member(models.Model):
     first_name  = models.CharField(max_length=100)
     last_name   = models.CharField(max_length=100)
+    status      = models.CharField(max_length=100)
+    comment     = models.CharField(max_length=300)
     member_id   = models.IntegerField()
 
 class Crossings(models.Model):

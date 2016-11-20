@@ -31,7 +31,7 @@ def getUsers(request):
     if request.method == 'GET':
         response = serializers.serialize('json',
                                          mod.Member.objects.all(),
-                                         fields=('first_name', 'last_name', 'member_id'))
+                                         fields=('first_name', 'last_name', 'member_id', 'comment', 'status'))
 
         d = json.loads(response)
 
