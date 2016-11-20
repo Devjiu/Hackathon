@@ -350,7 +350,59 @@ def getLabUsers(request):
 
 def getProjects(request):
     if request.method == 'GET':
-        pass
+        response = serializers.serialize('json',
+                                         mod.Project.objects.all(),
+                                         fields=('name', 'description', 'is_lab', 'project_id'))
+        labs = json.loads(response)
+        print(labs)
+        labs = [x['fields'] for x in labs]
+        result = []
+        for lab in labs:
+            if not lab['is_lab']:
+                result.append(lab)
+
+        for instance in labs:
+            """ Add skills """
+            resp = serializers.serialize('json',
+                                         mod.ProjectSkills.objects.all(),
+                                         fields=('skill1','skill2', 'skill3', 'skill4', 'skill5', 'project_id'))
+            skills = json.loads(resp)
+            if len(skills):
+                skills = [x['fields'] for x in skills][0]
+                if instance['project_id'] == skills['project_id']:
+
+                    to_delete = []
+                    for key in skills:
+                        if skills[key] == '' or key == 'project_id':
+                            to_delete.append(key)
+
+                    for key in to_delete:
+                        skills.pop(key)
+                instance['skills'] = skills
+
+            """ Add interests """
+
+            resp = serializers.serialize('json',
+                                         mod.ProjectInterest.objects.all(),
+                                         fields=(
+                                         'interest1', 'interest2', 'interest3', 'interest4', 'interest5', 'project_id'))
+            interests = json.loads(resp)
+            if len(interests):
+                interests = [x['fields'] for x in interests][0]
+                print("interests : ", interests)
+
+                if instance['project_id'] == interests['project_id']:
+
+                    to_delete = []
+                    for key in interests:
+                        if interests[key] == '' or key == 'project_id':
+                            to_delete.append(key)
+
+                    for key in to_delete:
+                        interests.pop(key)
+                    instance['interests'] = interests
+
+        return JsonResponse(result, safe=False)
     return Http404
 
 
