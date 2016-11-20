@@ -121,7 +121,8 @@ def searchUser(request):
         keyset.add(result['member_id'])
     result = []
     for key in keyset:
-        result += _getUserInfo(key)
+        result.append(_getUserInfo(key))
+    print(result)
     return JsonResponse(result, safe=False)
 
 def getLabs(request):
