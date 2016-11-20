@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'^login/', views.login, name='login'),
     url(r'^getusers/', views.getUsers, name='getusers'),
     url(r'^getlabs/', views.getLabs, name='getlabs'),
-    url(r'^getlabusers/', views.getLabUsers, name='getlabusers')
+    url(r'^getlabusers/', views.getLabUsers, name='getlabusers'),
+    url(r'^user/', views.searchUser, name='searchuser')
 ]

@@ -1,9 +1,13 @@
+from itertools import chain
+
+from django.db.models import Q
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
 
 from django.core import serializers
 from django.http import JsonResponse
+from operator import attrgetter
 
 # from django.utils import simplejson
 
@@ -217,7 +221,34 @@ def _getUserInterests(user_id):
     print("---------------------------")
     return result
 
+def searchUser(request):
+    req = dict(request.GET)
+    key = list(req)[0]
+    print(key)
+    qs1 = mod.Member.objects.filter(first_name = key)
+    qs2 = mod.Member.objects.filter(last_name = key)
+    qs3 = mod.MemberInterest.objects.filter(Q(interest1=key) |
+                                      Q(interest2=key) |
+                                      Q(interest3=key) |
+                                      Q(interest4=key) |
+                                      Q(interest5=key) )
+    qs4 = mod.MemberSkills.objects.filter(Q(skill1=key) |
+                                    Q(skill2=key) |
+                                    Q(skill3=key) |
+                                    Q(skill4=key) |
+                                    Q(skill5=key))
+    qs5 = mod.MemberAchievements.objects.filter(  Q(achievement1=key) |
+                                            Q(achievement2=key) |
+                                            Q(achievement3=key) |
+                                            Q(achievement4=key) |
+                                            Q(achievement5=key) )
 
+    result_list = sorted(
+        chain(qs1, qs2, qs3, qs4, qs5),
+        key=attrgetter('date_created'))
+    print(result_list)
+    response = serializers.serialize("json", mod.Member.objects.get())
+    return req
 
 def getLabUsers(request):
     if request.method == 'GET':
