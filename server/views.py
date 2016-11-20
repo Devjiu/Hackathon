@@ -252,7 +252,7 @@ def getLabUsers(request):
         users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
         users = json.loads(users)
         print(users[0])
-        result = dict()
+        result = []
         if len(users):
             users = [x['fields'] for x in users]
 
@@ -261,7 +261,7 @@ def getLabUsers(request):
                 info = _getUserInfo(user['member_id'])
                 info['skills'] = _getUserSkills(user['member_id'])
                 info['interests'] = _getUserInterests(user['member_id'])
-                result = info
+                result.append(info)
 
         return JsonResponse(result, safe=False)
     return Http404
