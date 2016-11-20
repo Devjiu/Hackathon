@@ -121,7 +121,10 @@ def searchUser(request):
         keyset.add(result['member_id'])
     result = []
     for key in keyset:
-        result.append(_getUserInfo(key))
+        info              = _getUserInfo(key)
+        info['skills']    = _getUserSkills(key)
+        info['interests'] = _getUserInterests(key)
+        result.append(info)
     print(result)
     return JsonResponse(result, safe=False)
 
