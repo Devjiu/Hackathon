@@ -145,6 +145,7 @@ def getLabs(request):
         return JsonResponse(result, safe=False)
     return Http404
 
+
 """ USER SECTION """
 def _getUserInfo(user_id):
     """ Returns dict of member """
@@ -164,7 +165,6 @@ def _getUserInfo(user_id):
     print("result : ", result)
     print("---------------------------")
     return result
-
 
 def _getUserSkills(user_id):
     """ Returns dict of skills """
@@ -221,7 +221,7 @@ def _getProjectInfo(project_id):
     print("---------------------------")
 
     print("getting user interests id = ", project_id)
-    info = mod.Project.objects.filter(member_id=int(project_id))
+    info = mod.Project.objects.filter(project_id=int(project_id))
     info = serializers.serialize('json', info,
                                       fields=(
                                       'project_id', 'name', 'description', 'is_lab'))
@@ -247,7 +247,7 @@ def _getProjectSkills(project_id):
     print("---------------------------")
 
     print("getting user interests id = ", project_id)
-    skills = mod.ProjectSkills.objects.filter(member_id=int(project_id))
+    skills = mod.ProjectSkills.objects.filter(project_id=int(project_id))
     skills = serializers.serialize('json', skills,
                                       fields=(
                                       'project_id', 'name', 'description', 'is_lab'))
@@ -268,13 +268,12 @@ def _getProjectSkills(project_id):
     print("---------------------------")
     return result
 
-
 def _getProjectInterests(project_id):
     """ Returns project Interests """
     print("---------------------------")
 
     print("getting user interests id = ", project_id)
-    interests = mod.ProjectInterest.objects.filter(member_id=int(project_id))
+    interests = mod.ProjectInterest.objects.filter(project_id=int(project_id))
     interests = serializers.serialize('json', interests,
                                       fields=(
                                       'project_id', 'name', 'description', 'is_lab'))
@@ -363,22 +362,24 @@ def getProjects(request):
 
         for instance in labs:
             """ Add skills """
-            resp = serializers.serialize('json',
-                                         mod.ProjectSkills.objects.all(),
-                                         fields=('skill1','skill2', 'skill3', 'skill4', 'skill5', 'project_id'))
-            skills = json.loads(resp)
-            if len(skills):
-                skills = [x['fields'] for x in skills][0]
-                if instance['project_id'] == skills['project_id']:
-
-                    to_delete = []
-                    for key in skills:
-                        if skills[key] == '' or key == 'project_id':
-                            to_delete.append(key)
-
-                    for key in to_delete:
-                        skills.pop(key)
-                instance['skills'] = skills
+            # resp = serializers.serialize('json',
+            #                              mod.ProjectSkills.objects.all(),
+            #                              fields=('skill1','skill2', 'skill3', 'skill4', 'skill5', 'project_id'))
+            # skills = json.loads(resp)
+            # if len(skills):
+            #     skills = [x['fields'] for x in skills][0]
+            #     if instance['project_id'] == skills['project_id']:
+            #
+            #         to_delete = []
+            #         for key in skills:
+            #             if skills[key] == '' or key == 'project_id':
+            #                 to_delete.append(key)
+            #
+            #         for key in to_delete:
+            #             skills.pop(key)
+            #     instance['skills'] = skills
+            print("INSTANCE : ", instance)
+            instance['skills'] = _getProjectSkills(instance['project_id'])
 
             """ Add interests """
 
