@@ -159,13 +159,7 @@ def _getUserInfo(user_id):
     if len(users):
         result = [x['fields'] for x in users][0]
         print(result)
-        to_delete = []
-        for key in result:
-            if result[key] == '' or key == 'member_id':
-                to_delete.append(key)
-
-        for key in to_delete:
-            result.pop(key)
+        result.pop('member_id')
 
     print("result : ", result)
     print("---------------------------")
@@ -264,10 +258,6 @@ def getLabUsers(request):
 
             print(users)
             for user in users:
-                # tmp = mod.Member.objects.filter(member_id=user['member_id'])
-                # skills = mod.MemberSkills.objects.filter(member_id=user['member_id'])
-                # interests = mod.MemberInterest.objects.filter(member_id=user['member_id'])
-                # print(tmp, skills, interests)
                 info = _getUserInfo(user['member_id'])
                 info['skills'] = _getUserSkills(user['member_id'])
                 info['interests'] = _getUserInterests(user['member_id'])
