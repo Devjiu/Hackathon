@@ -20,6 +20,19 @@ class Crossings(models.Model):
         unique_together = (('project_id', 'member_id'),)
 
 
+class Event(models.Model):
+    name        = models.CharField(max_length=100)
+    description = models.CharField(max_length=8192)
+    project_id  = models.IntegerField()
+    time        = models.DateTimeField()
+
+class CrossEvent(models.Model):
+    project_id  = models.IntegerField()
+    member_id   = models.IntegerField()
+    class Meta:
+        unique_together = (('project_id', 'member_id'),)
+
+
 class MemberInterest(models.Model):
     member_id   = models.ForeignKey(Member)
     interest1   = models.CharField(max_length=100)
@@ -60,11 +73,6 @@ class ProjectSkills(models.Model):
     skill4      = models.CharField(max_length=100)
     skill5      = models.CharField(max_length=100)
 
-class Event(models.Model):
-    name        = models.CharField(max_length=100)
-    description = models.CharField(max_length=8192)
-    project_id  = models.IntegerField()
-    time        = models.DateTimeField()
 
 
 class EventTechnologies(models.Model):

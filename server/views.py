@@ -14,6 +14,12 @@ from operator import attrgetter
 import json
 import server.models as mod
 
+
+methodmap = { '0' : 'lab',
+              '1' : 'project',
+              '2' : 'event'}
+
+
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -410,6 +416,26 @@ def getEvents(request):
         return JsonResponse(result, safe=False)
     return Http404
 
+def getEventUsers(request):
+    if request.method == 'GET':
+        req = dict(request.GET)
+
+        users = mod.CrossEvent.objects.filter(project_id=int(req['id'][0]))
+        users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
+        users = json.loads(users)
+
+        result = []
+        if len(users):
+            users = [x['fields'] for x in users]
+
+            for user in users:
+                info = _getUserInfo(user['member_id'])
+                info['skills'] = _getUserSkills(user['member_id'])
+                info['interests'] = _getUserInterests(user['member_id'])
+                result.append(info)
+
+        return JsonResponse(result, safe=False)
+    return Http404
 
 def compareDicts(dict_a, dict_b):
     keys_a = set(dict_a.keys())
@@ -434,3 +460,22 @@ def dictInclude(dict_bigger, dict_smaller):
 
     return True
 
+
+def acceptLab(request):
+    if request.method == 'GET':
+        params = dict(request.GET)
+        print(int(params['accept'][0]))
+        if int(params['accept'][0]) == 1:
+            print("here")
+            p = mod.CrossEvent.objects.create(project_id=int(params['lab'][0]),
+                                            member_id=int(params['user'][0]))
+
+        else:
+            try:
+                p = mod.CrossEvent.objects.get(project_id=int(params['lab'][0]),
+                                               member_id=int(params['user'][0])).delete()
+
+            except mod.CrossEvent.DoesNotExist:
+                print("No such value")
+        return JsonResponse({"OK": 1})
+    return Http404
