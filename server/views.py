@@ -79,7 +79,24 @@ def getUsers(request):
                 instance['interests'] = interests
 
         return JsonResponse(data, safe=False)
+    return Http404
 
+
+def getLabs(request):
+    if request.method == 'GET':
+        response = serializers.serialize('json',
+                                         mod.Project.objects.all(),
+                                         fields=('name', 'description', 'is_lab', 'project_id'))
+        labs = json.loads(response)
+        print(labs)
+        labs = [x['fields'] for x in labs]
+        result = []
+        for lab in labs:
+            if lab['is_lab']:
+                result.append(lab)
+
+        return JsonResponse(result, safe=False)
+    return Http404
 
 def compareDicts(dict_a, dict_b):
     keys_a = set(dict_a.keys())
