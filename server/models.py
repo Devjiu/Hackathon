@@ -27,8 +27,8 @@ class Event(models.Model):
     time        = models.DateTimeField()
 
 class CrossEvent(models.Model):
-    project_id  = models.IntegerField()
-    member_id   = models.IntegerField()
+    project_id  = models.ForeignKey(Event)
+    member_id   = models.ForeignKey(Member)
     class Meta:
         unique_together = (('project_id', 'member_id'),)
 

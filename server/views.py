@@ -511,7 +511,7 @@ def getEventUsers(request):
         users = mod.CrossEvent.objects.filter(project_id=int(req['id'][0]))
         users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
         users = json.loads(users)
-
+        print(users)
         result = []
         if len(users):
             users = [x['fields'] for x in users]
