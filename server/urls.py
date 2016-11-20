@@ -9,5 +9,5 @@ urlpatterns = [
     url(r'^getlabs/', views.getLabs, name='getlabs'),
     url(r'^getprojects/', views.getProjects, name='getprojects'),
     url(r'^getlabusers/', views.getLabUsers, name='getlabusers'),
-    url(r'^user/', views.searchUser, name='searchuser')
+    url(r'^searchusers/', views.searchUser, name='searchusers')
 ]
