@@ -63,5 +63,5 @@ class ProjectSkills(models.Model):
 class Event(models.Model):
     name        = models.CharField(max_length=100)
     description = models.CharField(max_length=8192)
-    event_id    = models.IntegerField()
+    project_id  = models.IntegerField()
     time        = models.DateTimeField()
