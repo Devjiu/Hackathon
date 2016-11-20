@@ -58,9 +58,90 @@ def getUsers(request):
         return JsonResponse(data, safe=False)
     return Http404
 
-# def searchLabs(request):
-#
-# def searchProjects(request):
+def searchLabs(request):
+    search_word = list(request.GET)[0]
+    print(search_word)
+    qs1 = mod.Project.objects.filter(name__icontains=search_word, is_lab=True)
+    qs2 = mod.Project.objects.filter(description__icontains=search_word, is_lab=True)
+    qs3 = mod.ProjectSkills.objects.filter(    Q(skill1__icontains=search_word,project_id__is_lab__exact=True) |
+                                               Q(skill2__icontains=search_word,project_id__is_lab__exact=True) |
+                                               Q(skill3__icontains=search_word,project_id__is_lab__exact=True) |
+                                               Q(skill4__icontains=search_word,project_id__is_lab__exact=True) |
+                                               Q(skill5__icontains=search_word,project_id__is_lab__exact=True))
+    qs4 = mod.ProjectInterest.objects.filter(Q(interest1__icontains=search_word,project_id__is_lab__exact=True) |
+                                             Q(interest2__icontains=search_word,project_id__is_lab__exact=True) |
+                                             Q(interest3__icontains=search_word,project_id__is_lab__exact=True) |
+                                             Q(interest4__icontains=search_word,project_id__is_lab__exact=True) |
+                                             Q(interest5__icontains=search_word,project_id__is_lab__exact=True))
+    result_list_1 = sorted(
+        chain(qs1, qs2),
+        key=attrgetter('project_id'))
+    result_list_2 = sorted(
+        chain(qs3,qs4),
+        key=attrgetter('project_id_id'))
+    result_list = result_list_2 + result_list_1
+    print(result_list)
+    response = serializers.serialize("json", result_list, fields=('project_id'))
+    users = json.loads(response)
+    keyset = set()
+    if len(users):
+        result = [x['fields'] for x in users][0]
+        keyset.add(result['project_id'])
+    result = []
+    for key in keyset:
+        info = _getProjectInfo(key)
+        # print('Name:',_getEventName(key))
+        print('Info: ', info)
+        info['interests'] = _getProjectInterests(key)
+        info['skills'] = _getProjectSkills(key)
+        print(info)
+        # info['description'] = _getEventName(key)
+        result.append(info)
+    print(result)
+    return JsonResponse(result, safe=False)
+
+
+def searchProjects(request):
+    search_word = list(request.GET)[0]
+    print(search_word)
+    qs1 = mod.Project.objects.filter(name__icontains=search_word, is_lab=False)
+    qs2 = mod.Project.objects.filter(description__icontains=search_word, is_lab=False)
+    qs3 = mod.ProjectSkills.objects.filter(    Q(skill1__icontains=search_word,project_id__is_lab__exact=False) |
+                                               Q(skill2__icontains=search_word,project_id__is_lab__exact=False) |
+                                               Q(skill3__icontains=search_word,project_id__is_lab__exact=False) |
+                                               Q(skill4__icontains=search_word,project_id__is_lab__exact=False) |
+                                               Q(skill5__icontains=search_word,project_id__is_lab__exact=False))
+    qs4 = mod.ProjectInterest.objects.filter(Q(interest1__icontains=search_word,project_id__is_lab__exact=False) |
+                                             Q(interest2__icontains=search_word,project_id__is_lab__exact=False) |
+                                             Q(interest3__icontains=search_word,project_id__is_lab__exact=False) |
+                                             Q(interest4__icontains=search_word,project_id__is_lab__exact=False) |
+                                             Q(interest5__icontains=search_word,project_id__is_lab__exact=False))
+    result_list_1 = sorted(
+        chain(qs1, qs2),
+        key=attrgetter('project_id'))
+    result_list_2 = sorted(
+        chain(qs3,qs4),
+        key=attrgetter('project_id_id'))
+    result_list = result_list_2 + result_list_1
+    print(result_list)
+    response = serializers.serialize("json", result_list, fields=('project_id'))
+    users = json.loads(response)
+    keyset = set()
+    if len(users):
+        result = [x['fields'] for x in users][0]
+        keyset.add(result['project_id'])
+    result = []
+    for key in keyset:
+        info = _getProjectInfo(key)
+        # print('Name:',_getEventName(key))
+        print('Info: ', info)
+        info['interests'] = _getProjectInterests(key)
+        info['skills'] = _getProjectSkills(key)
+        print(info)
+        # info['description'] = _getEventName(key)
+        result.append(info)
+    print(result)
+    return JsonResponse(result, safe=False)
 
 def searchEvents(request):
     search_word = list(request.GET)[0]
@@ -84,8 +165,10 @@ def searchEvents(request):
     users = json.loads(response)
     keyset = set()
     if len(users):
-        result = [x['fields'] for x in users][0]
-        keyset.add(result['project_id'])
+        ar = [x['fields'] for x in users]
+        for el in ar:
+            print("res:", el['project_id'])
+            keyset.add(el['project_id'])
     result = []
     for key in keyset:
         info = _getEventName(key)
@@ -130,10 +213,13 @@ def searchUser(request):
     users = json.loads(response)
     print(users)
     keyset = set()
+    result = []
     if len(users):
-        result = [x['fields'] for x in users][0]
-        print("res:",result['member_id'])
-        keyset.add(result['member_id'])
+        ar = [x['fields'] for x in users]
+        for el in ar:
+            result += el
+            print("res:",el['member_id'])
+            keyset.add(el['member_id'])
     print(keyset)
     result = []
     for key in keyset:
