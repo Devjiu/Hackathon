@@ -65,3 +65,12 @@ class Event(models.Model):
     description = models.CharField(max_length=8192)
     project_id  = models.IntegerField()
     time        = models.DateTimeField()
+
+
+class EventTechnologies(models.Model):
+    project_id  = models.ForeignKey(Event)
+    tech1       = models.CharField(max_length=100)
+    tech2       = models.CharField(max_length=100)
+    tech3       = models.CharField(max_length=100)
+    tech4       = models.CharField(max_length=100)
+    tech5       = models.CharField(max_length=100)
