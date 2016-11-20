@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^getusers/', views.getUsers, name='getusers'),
     url(r'^getlabs/', views.getLabs, name='getlabs'),
     url(r'^getprojects/', views.getProjects, name='getprojects'),
+    url(r'^getevents/', views.getEvents, name='getevents'),
     url(r'^getlabusers/', views.getLabUsers, name='getlabusers'),
     url(r'^searchusers/', views.searchUser, name='searchusers')
 ]
