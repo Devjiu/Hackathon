@@ -25,20 +25,20 @@ def login(request):
 
     return Http404
 
+
 def getUsers(request):
+    """ Returns all users info """
     if request.method == 'GET':
         response = serializers.serialize('json',
                                          mod.Member.objects.all(),
                                          fields=('first_name', 'last_name', 'member_id'))
 
         d = json.loads(response)
-        # print(d)
-        # print(d)
-        # print(d)
+
         data = [x['fields'] for x in d]
         print("data : ", data)
         for instance in data:
-            # print("instance = ", instance)
+
             """ Add skills """
             resp = serializers.serialize('json',
                                            mod.MemberSkills.objects.all(),
@@ -48,8 +48,7 @@ def getUsers(request):
             print(skills)
 
             if instance['member_id'] == skills['member_id']:
-                # for skill in skills:
-                #     instance[skill] = skills[skill]
+
                 to_delete = []
                 for key in skills:
                     if skills[key] == '' or key == 'member_id':
@@ -69,19 +68,39 @@ def getUsers(request):
             print("interests : ", interests)
 
             if instance['member_id'] == interests['member_id']:
-                # for interest in interests:
-                #     instance[interest] = interests[interest]
+
                 to_delete = []
                 for key in interests:
                     if interests[key] == '' or key == 'member_id':
                         to_delete.append(key)
-                # interests.pop('member_id')
+
                 for key in to_delete:
                     interests.pop(key)
                 instance['interests'] = interests
 
-        # print(data)
-        # print(dict(data))
         return JsonResponse(data, safe=False)
-        # return HttpResponse(simplejson.dumps(response.replace('\"', '\'')), mimetype='application/json')
+
+
+def compareDicts(dict_a, dict_b):
+    keys_a = set(dict_a.keys())
+    keys_b = set(dict_b.keys())
+    intersection = keys_a & keys_b
+    similar = 0
+    for key in intersection:
+        if dict_a[key] == dict_b[key]:
+            similar += 1
+    return similar
+
+
+def dictInclude(dict_bigger, dict_smaller):
+    keys_big = set(dict_bigger.keys())
+    keys_smal= set(dict_smaller.keys())
+    key_match = keys_smal.issubset(keys_big)
+    if not key_match:
+        return False
+    for key in keys_smal:
+        if dict_smaller[key] != dict_bigger[key]:
+            return False
+
+    return True
 
