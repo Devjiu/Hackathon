@@ -250,7 +250,7 @@ def _getProjectSkills(project_id):
     skills = mod.ProjectSkills.objects.filter(project_id=int(project_id))
     skills = serializers.serialize('json', skills,
                                       fields=(
-                                      'project_id', 'name', 'description', 'is_lab'))
+                                      'project_id', 'skill1','skill2', 'skill3', 'skill4', 'skill5'))
     skills = json.loads(skills)
     result = []
     if len(skills):
@@ -276,7 +276,7 @@ def _getProjectInterests(project_id):
     interests = mod.ProjectInterest.objects.filter(project_id=int(project_id))
     interests = serializers.serialize('json', interests,
                                       fields=(
-                                      'project_id', 'name', 'description', 'is_lab'))
+                                      'project_id', 'interest1', 'interest2', 'interest3', 'interest4', 'interest5'))
     interests = json.loads(interests)
     result = []
     if len(interests):
@@ -379,6 +379,7 @@ def getProjects(request):
             #             skills.pop(key)
             #     instance['skills'] = skills
             print("INSTANCE : ", instance)
+            print(instance['project_id'])
             instance['skills'] = _getProjectSkills(instance['project_id'])
 
             """ Add interests """
