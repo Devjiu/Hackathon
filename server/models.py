@@ -39,6 +39,7 @@ class CrossEvent(models.Model):
 
 class MemberInterest(models.Model):
     member_id   = models.ForeignKey(Member)
+    #member_id   = models.IntegerField()
     interest1   = models.CharField(max_length=100)
     interest2   = models.CharField(max_length=100)
     interest3   = models.CharField(max_length=100)
@@ -47,6 +48,7 @@ class MemberInterest(models.Model):
 
 class MemberSkills(models.Model):
     member_id   = models.ForeignKey(Member)
+    #member_id   = models.IntegerField()
     skill1      = models.CharField(max_length=100)
     skill2      = models.CharField(max_length=100)
     skill3      = models.CharField(max_length=100)

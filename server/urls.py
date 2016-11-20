@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'^acceptlab/', views.acceptLab, name='acceptlab'),
     url(r'^searchevents/', views.searchEvents, name='searchuevents'),
     url(r'^searchlabs/', views.searchLabs, name='searchlabs'),
-    url(r'^searchprojects/', views.searchProjects, name='searchprojects')
+    url(r'^searchprojects/', views.searchProjects, name='searchprojects'),
+    url(r'^addaccounts/', views.add10accounts, name='add10accounts')
 ]

@@ -709,3 +709,35 @@ def acceptLab(request):
                     print("No such value")
             return JsonResponse({"OK": 1})
     return Http404
+
+import numpy as np
+from server.models import *
+import os
+
+def add10accounts(request):
+    if request.method == 'GET':
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "untitled.settings")
+
+        names = ["Alex", "Viktor", "Petr", "Sergey", "Dmitry", "Ivan", "Konstantin", "Maksim", "Oleg", "Matvej", "Evgeny"]
+        surnames = ["Ivanov", "Petrov", "Sidorov", "Gerasimov", "Smirnov", "Baboyan", "Einstein", "Newton"]
+
+        skills = ["C++", "C", "Java", "Python", "Swift", "Math", "Lisp", "Physics", "Django", "PHP", "JS", "Programming", "Quantum Physics", "Swimming", "Go", "Ajax", "Ruby", "Perl", "Fortran", "ALGOL 60", "Haskell", "lua", "Machine Learning"]
+        comments = ["Need team", "Hello", "May the force be with you", "1234567890", "Another brick in the wall", "Counting Stars", "Eat. Sleep. Rave. Repeat."]
+
+        ids = np.random.randint(1000, 5000, size=10)
+        print(ids)
+        id_set = set(ids)
+        print(id_set)
+        
+        for id in ids:
+            print(id)
+            name = names[np.random.random_integers(len(names))]
+            surname = surnames[np.random.random_integers(len(surnames))]
+            skill1 = skills[np.random.random_integers(len(skills))]
+            skill2 = skills[np.random.random_integers(len(skills))]
+            int1 = skills[np.random.random_integers(len(skills))]
+            int2 = skills[np.random.random_integers(len(skills))]
+            comment = comments[np.random.random_integers(len(comments))]
+            Member.objects.create(member_id = id, comment = comment, first_name = name, last_name = surname)
+            MemberSkills.objects.create(member_id_id = id, skill1 = skill1, skill2 = skill2)
+            MemberInterest.objects.create(member_id_id = id, interest1 = int1, interest2 = int2)
