@@ -58,6 +58,42 @@ def getUsers(request):
         return JsonResponse(data, safe=False)
     return Http404
 
+# def searchLabs(request):
+#
+# def searchProjects(request):
+
+def searchEvents(request):
+    search_word = list(request.GET)[0]
+    print(search_word)
+    qs1 = mod.Event.objects.filter(name__icontains=search_word)
+    qs2 = mod.Event.objects.filter(description__icontains=search_word)
+    qs3 = mod.EventTechnologies.objects.filter( Q(skill1__icontains=search_word) |
+                                                Q(skill2__icontains=search_word) |
+                                                Q(skill3__icontains=search_word) |
+                                                Q(skill4__icontains=search_word) |
+                                                Q(skill5__icontains=search_word))
+    result_list = sorted(
+        chain(qs1, qs2, qs3),
+        key=attrgetter('project_id'))
+    print(result_list)
+    response = serializers.serialize("json", result_list, fields=('project_id'))
+    users = json.loads(response)
+    keyset = set()
+    if len(users):
+        result = [x['fields'] for x in users][0]
+        keyset.add(result['project_id'])
+    result = []
+    for key in keyset:
+        info = _getEventName(key)
+        #print('Name:',_getEventName(key))
+        print('Info: ',info)
+        info['skills']= _getEventTech(key)
+        print(info)
+        #info['description'] = _getEventName(key)
+        result.append(info)
+    print(result)
+    return JsonResponse(result, safe=False)
+
 def searchUser(request):
     req = dict(request.GET)
     key = list(req)[0]
@@ -307,6 +343,58 @@ def _getProjectInterests(project_id):
     print("---------------------------")
     return result
 
+def _getEventInfo(project_id):
+    print("---------------------------")
+
+    print("getting event projects id = ", project_id)
+    info = mod.EventTechnologies.objects.filter(project_id=int(project_id))
+    print("getting event projects info = ", info)
+    info = serializers.serialize('json', info,
+                                 fields=(
+                                     'project_id', 'name', 'description', 'is_lab',
+                                     'skill1', 'skill2', 'skill3', 'skill4', 'skill5'))
+    info = json.loads(info)
+    result = []
+    if len(info):
+        result = [x['fields'] for x in info][0]
+        print(result)
+        to_delete = []
+        for key in result:
+            if result[key] == '' or key == 'project_id':
+                to_delete.append(key)
+
+        for key in to_delete:
+            result.pop(key)
+
+    print("result : ", result)
+    print("---------------------------")
+    return result
+
+def _getEventName(project_id):
+    print("---------------------------")
+
+    print("getting event projects id = ", project_id)
+    info = mod.Event.objects.filter(project_id=int(project_id))
+    info = serializers.serialize('json', info,
+                                 fields=(
+                                     'project_id', 'name', 'description', 'is_lab',
+                                     'skills'))
+    info = json.loads(info)
+    result = []
+    if len(info):
+        result = [x['fields'] for x in info][0]
+        print(result)
+        to_delete = []
+        for key in result:
+            if result[key] == '' or key == 'project_id':
+                to_delete.append(key)
+
+        for key in to_delete:
+            result.pop(key)
+
+    print("result : ", result)
+    print("---------------------------")
+    return result
 
 def _getEventTech(project_id):
     """ Returns project info """
