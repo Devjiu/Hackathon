@@ -118,13 +118,12 @@ def searchUser(request):
     keyset = set()
     if len(users):
         result = [x['fields'] for x in users][0]
+        print("res:",result['member_id'])
         keyset.add(result['member_id'])
+    print(keyset)
     result = []
     for key in keyset:
-        info              = _getUserInfo(key)
-        info['skills']    = _getUserSkills(key)
-        info['interests'] = _getUserInterests(key)
-        result.append(info)
+        result.append( _getUserInfo(key))
     print(result)
     return JsonResponse(result, safe=False)
 
@@ -334,35 +333,7 @@ def _getProjectInterests(project_id):
     print("---------------------------")
     return result
 
-""" EVENT SECTION """
 
-def _getEventTech(project_id):
-    """ Returns project info """
-    print("---------------------------")
-
-    print("getting event technologies id = ", project_id)
-    tech = mod.EventTechnologies.objects.filter(project_id=int(project_id))
-    tech = serializers.serialize('json', tech,
-                                 fields=(
-                                     'project_id', 'skill1', 'skill2', 'skill3', 'skill4', 'skill5'))
-    tech = json.loads(tech)
-    result = []
-    if len(tech):
-        result = [x['fields'] for x in tech][0]
-        print(result)
-        to_delete = []
-        for key in result:
-            if result[key] == '' or key == 'project_id':
-                to_delete.append(key)
-
-        for key in to_delete:
-            result.pop(key)
-
-    print("result : ", result)
-    print("---------------------------")
-    return result
-
-""" GETTERS """
 def getLabUsers(request):
     if request.method == 'GET':
         req = dict(request.GET)
@@ -384,6 +355,7 @@ def getLabUsers(request):
         return JsonResponse(result, safe=False)
     return Http404
 
+
 def getProjects(request):
     if request.method == 'GET':
         response = serializers.serialize('json',
@@ -399,6 +371,24 @@ def getProjects(request):
 
         for instance in labs:
             """ Add skills """
+            # resp = serializers.serialize('json',
+            #                              mod.ProjectSkills.objects.all(),
+            #                              fields=('skill1','skill2', 'skill3', 'skill4', 'skill5', 'project_id'))
+            # skills = json.loads(resp)
+            # if len(skills):
+            #     skills = [x['fields'] for x in skills][0]
+            #     if instance['project_id'] == skills['project_id']:
+            #
+            #         to_delete = []
+            #         for key in skills:
+            #             if skills[key] == '' or key == 'project_id':
+            #                 to_delete.append(key)
+            #
+            #         for key in to_delete:
+            #             skills.pop(key)
+            #     instance['skills'] = skills
+            print("INSTANCE : ", instance)
+            print(instance['project_id'])
             instance['skills'] = _getProjectSkills(instance['project_id'])
 
             """ Add interests """
@@ -422,24 +412,6 @@ def getProjects(request):
                     for key in to_delete:
                         interests.pop(key)
                     instance['interests'] = interests
-
-        return JsonResponse(result, safe=False)
-    return Http404
-
-def getEvents(request):
-    if request.method == 'GET':
-        info = mod.Event.objects.all()
-        info = serializers.serialize('json', info,
-                                     fields=(
-                                         'project_id', 'name', 'description', 'time'))
-        info = json.loads(info)
-        result = []
-        if len(info):
-            result = [x['fields'] for x in info]
-
-        for instance in result:
-            tech = _getEventTech(instance['project_id'])
-            instance['skills'] = tech
 
         return JsonResponse(result, safe=False)
     return Http404

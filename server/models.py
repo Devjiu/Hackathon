@@ -65,3 +65,12 @@ class Event(models.Model):
     description = models.CharField(max_length=8192)
     project_id  = models.IntegerField()
     time        = models.DateTimeField()
+
+
+class EventTechnologies(models.Model):
+    project_id  = models.ForeignKey(Event)
+    skill1      = models.CharField(max_length=100)
+    skill2      = models.CharField(max_length=100)
+    skill3      = models.CharField(max_length=100)
+    skill4      = models.CharField(max_length=100)
+    skill5      = models.CharField(max_length=100)
