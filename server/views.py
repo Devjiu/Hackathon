@@ -731,13 +731,18 @@ def add10accounts(request):
         
         for id in ids:
             print(id)
-            name = names[np.random.random_integers(len(names))]
-            surname = surnames[np.random.random_integers(len(surnames))]
-            skill1 = skills[np.random.random_integers(len(skills))]
-            skill2 = skills[np.random.random_integers(len(skills))]
-            int1 = skills[np.random.random_integers(len(skills))]
-            int2 = skills[np.random.random_integers(len(skills))]
-            comment = comments[np.random.random_integers(len(comments))]
-            Member.objects.create(member_id = id, comment = comment, first_name = name, last_name = surname)
+            name = names[np.random.random_integers(len(names)-1)]
+            surname = surnames[np.random.random_integers(len(surnames)-1)]
+            skill1 = skills[np.random.random_integers(len(skills)-1)]
+            skill2 = skills[np.random.random_integers(len(skills)-1)]
+            int1 = skills[np.random.random_integers(len(skills)-1)]
+            int2 = skills[np.random.random_integers(len(skills)-1)]
+            comment = comments[np.random.random_integers(len(comments)-1)]
+            Member.objects.create(member_id = id,
+                                  comment = comment,
+                                  first_name = name,
+                                  last_name = surname,
+                                  status = "Student")
             MemberSkills.objects.create(member_id_id = id, skill1 = skill1, skill2 = skill2)
             MemberInterest.objects.create(member_id_id = id, interest1 = int1, interest2 = int2)
+        return HttpResponse("hello!")
