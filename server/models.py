@@ -14,8 +14,10 @@ class Member(models.Model):
     member_id   = models.IntegerField()
 
 class Crossings(models.Model):
-    project_id  = models.ForeignKey(Project)
-    member_id   = models.ForeignKey(Member)
+    # project_id  = models.ForeignKey(Project)
+    project_id  = models.IntegerField()
+    # member_id   = models.ForeignKey(Member)
+    member_id   = models.IntegerField()
     class Meta:
         unique_together = (('project_id', 'member_id'),)
 
@@ -27,8 +29,10 @@ class Event(models.Model):
     time        = models.DateTimeField()
 
 class CrossEvent(models.Model):
-    project_id  = models.ForeignKey(Event)
-    member_id   = models.ForeignKey(Member)
+    # project_id  = models.ForeignKey(Event)
+    project_id  = models.IntegerField()
+    # member_id   = models.ForeignKey(Member)
+    member_id   = models.IntegerField()
     class Meta:
         unique_together = (('project_id', 'member_id'),)
 

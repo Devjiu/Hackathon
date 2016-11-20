@@ -426,11 +426,12 @@ def _getEventTech(project_id):
 def getLabUsers(request):
     if request.method == 'GET':
         req = dict(request.GET)
-
+        print(req)
         users = mod.Crossings.objects.filter(project_id=int(req['id'][0]))
         users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
         users = json.loads(users)
 
+        print(users)
         result = []
         if len(users):
             users = [x['fields'] for x in users]
@@ -532,7 +533,7 @@ def getProjectUsers(request):
         users = mod.Crossings.objects.filter(project_id=int(req['id'][0]))
         users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
         users = json.loads(users)
-       
+
         result = []
         if len(users):
             users = [x['fields'] for x in users]
@@ -597,11 +598,11 @@ def acceptLab(request):
             return JsonResponse({"OK": 1})
         elif int(params['type'][0]) == 1 or int(params['type'][0]) == 0:
             if int(params['accept'][0]) == 1:
-                try:
-                    p = mod.Crossings.objects.create(project_id=int(params['lab'][0]),
+                # try:
+                p = mod.Crossings.objects.create(project_id=int(params['lab'][0]),
                                                   member_id=int(params['user'][0]))
-                except:
-                    print("Object exists")
+                # except:
+                #     print("Object exists")
 
                 print("Added")
             else:
@@ -610,7 +611,7 @@ def acceptLab(request):
                                                    member_id=int(params['user'][0])).delete()
                     print("Deleted")
 
-                except mod.CrossEvent.DoesNotExist:
+                except mod.Crossings.DoesNotExist:
                     print("No such value")
             return JsonResponse({"OK": 1})
     return Http404
