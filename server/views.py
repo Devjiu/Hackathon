@@ -465,17 +465,41 @@ def acceptLab(request):
     if request.method == 'GET':
         params = dict(request.GET)
         print(int(params['accept'][0]))
-        if int(params['accept'][0]) == 1:
-            print("here")
-            p = mod.CrossEvent.objects.create(project_id=int(params['lab'][0]),
-                                            member_id=int(params['user'][0]))
+        if int(params['type'][0]) == 2:
+            if int(params['accept'][0]) == 1:
+                print("here")
+                try :
+                    p = mod.CrossEvent.objects.create(project_id=int(params['lab'][0]),
+                                                member_id=int(params['user'][0]))
+                except:
+                    print("Object exists")
 
-        else:
-            try:
-                p = mod.CrossEvent.objects.get(project_id=int(params['lab'][0]),
-                                               member_id=int(params['user'][0])).delete()
+                print("Added")
+            else:
+                try:
+                    p = mod.CrossEvent.objects.get(project_id=int(params['lab'][0]),
+                                                   member_id=int(params['user'][0])).delete()
+                    print("Deleted")
 
-            except mod.CrossEvent.DoesNotExist:
-                print("No such value")
-        return JsonResponse({"OK": 1})
+                except mod.CrossEvent.DoesNotExist:
+                    print("No such value")
+            return JsonResponse({"OK": 1})
+        elif int(params['type'][0]) == 1 or int(params['type'][0]) == 0:
+            if int(params['accept'][0]) == 1:
+                try:
+                    p = mod.Crossings.objects.create(project_id=int(params['lab'][0]),
+                                                  member_id=int(params['user'][0]))
+                except:
+                    print("Object exists")
+
+                print("Added")
+            else:
+                try:
+                    p = mod.Crossings.objects.get(project_id=int(params['lab'][0]),
+                                                   member_id=int(params['user'][0])).delete()
+                    print("Deleted")
+
+                except mod.CrossEvent.DoesNotExist:
+                    print("No such value")
+            return JsonResponse({"OK": 1})
     return Http404
