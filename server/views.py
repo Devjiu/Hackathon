@@ -525,6 +525,29 @@ def getEventUsers(request):
         return JsonResponse(result, safe=False)
     return Http404
 
+def getProjectUsers(request):
+    if request.method == 'GET':
+        req = dict(request.GET)
+
+        users = mod.Crossings.objects.filter(project_id=int(req['id'][0]))
+        users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
+        users = json.loads(users)
+       
+        result = []
+        if len(users):
+            users = [x['fields'] for x in users]
+
+            for user in users:
+                info = _getUserInfo(user['member_id'])
+                info['skills'] = _getUserSkills(user['member_id'])
+                info['interests'] = _getUserInterests(user['member_id'])
+                result.append(info)
+
+        return JsonResponse(result, safe=False)
+    return Http404
+
+
+
 def compareDicts(dict_a, dict_b):
     keys_a = set(dict_a.keys())
     keys_b = set(dict_b.keys())
