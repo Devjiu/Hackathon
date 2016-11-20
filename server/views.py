@@ -72,9 +72,13 @@ def searchEvents(request):
                                                 Q(skill3__icontains=search_word) |
                                                 Q(skill4__icontains=search_word) |
                                                 Q(skill5__icontains=search_word))
-    result_list = sorted(
+    result_list_1 = sorted(
         chain(qs1, qs2, qs3),
         key=attrgetter('project_id'))
+    result_list_2 = sorted(
+        chain(qs3),
+        key=attrgetter('project_id_id'))
+    result_list = result_list_2 + result_list_1
     print(result_list)
     response = serializers.serialize("json", result_list, fields=('project_id'))
     users = json.loads(response)
@@ -116,10 +120,13 @@ def searchUser(request):
                                             Q(achievement4__icontains=key) |
                                             Q(achievement5__icontains=key))
 
-    result_list = sorted(
-        chain(qs1, qs2, qs3, qs4, qs5),
+    result_list_1 = sorted(
+        chain(qs1, qs2),
         key=attrgetter('member_id'))
-    response = serializers.serialize("json", result_list, fields=('member_id'))
+    result_list_2 = sorted(
+        chain(qs3, qs4, qs5),
+        key=attrgetter('member_id_id'))
+    response = serializers.serialize("json", result_list_1 + result_list_2, fields=('member_id'))
     users = json.loads(response)
     print(users)
     keyset = set()
@@ -136,6 +143,7 @@ def searchUser(request):
         result.append(info)
     print(result)
     return JsonResponse(result, safe=False)
+
 
 def getLabs(request):
     if request.method == 'GET':
