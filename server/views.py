@@ -209,7 +209,7 @@ def _getUserInfo(user_id):
     if len(users):
         result = [x['fields'] for x in users][0]
         print(result)
-        result.pop('member_id')
+        # result.pop('member_id')
 
     print("result : ", result)
     print("---------------------------")
