@@ -141,6 +141,16 @@ def getLabs(request):
         return JsonResponse(result, safe=False)
     return Http404
 
+
+def getLabUsers(request, idx):
+    print("hello")
+    if request.method == 'GET':
+        users = mod.Crossings.filter(project_id=idx)
+        print("id = ", idx)
+        print(users)
+    return Http404
+
+
 def compareDicts(dict_a, dict_b):
     keys_a = set(dict_a.keys())
     keys_b = set(dict_b.keys())
