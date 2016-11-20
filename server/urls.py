@@ -13,4 +13,4 @@ urlpatterns = [
     url(r'^geteventusers/', views.getEventUsers, name='geteventusers'),
     url(r'^searchusers/', views.searchUser, name='searchusers'),
     url(r'^acceptlab/', views.acceptLab, name='acceptlab')
-]
+]   url(r'^searchevents/', views.searchEvents, name='searchuevents')
