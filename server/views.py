@@ -91,23 +91,23 @@ def searchUser(request):
     req = dict(request.GET)
     key = list(req)[0]
     print(key)
-    qs1 = mod.Member.objects.filter(first_name = key)
-    qs2 = mod.Member.objects.filter(last_name = key)
-    qs3 = mod.MemberInterest.objects.filter(Q(interest1=key) |
-                                      Q(interest2=key) |
-                                      Q(interest3=key) |
-                                      Q(interest4=key) |
-                                      Q(interest5=key))
-    qs4 = mod.MemberSkills.objects.filter(Q(skill1=key) |
-                                    Q(skill2=key) |
-                                    Q(skill3=key) |
-                                    Q(skill4=key) |
-                                    Q(skill5=key))
-    qs5 = mod.MemberAchievements.objects.filter(Q(achievement1=key) |
-                                            Q(achievement2=key) |
-                                            Q(achievement3=key) |
-                                            Q(achievement4=key) |
-                                            Q(achievement5=key))
+    qs1 = mod.Member.objects.filter(first_name__icontains = key)
+    qs2 = mod.Member.objects.filter(last_name__icontains = key)
+    qs3 = mod.MemberInterest.objects.filter(Q(interest1__icontains=key) |
+                                      Q(interest2__icontains=key) |
+                                      Q(interest3__icontains=key) |
+                                      Q(interest4__icontains=key) |
+                                      Q(interest5__icontains=key))
+    qs4 = mod.MemberSkills.objects.filter(Q(skill1__icontains=key) |
+                                    Q(skill2__icontains=key) |
+                                    Q(skill3__icontains=key) |
+                                    Q(skill4__icontains=key) |
+                                    Q(skill5__icontains=key))
+    qs5 = mod.MemberAchievements.objects.filter(Q(achievement1__icontains=key) |
+                                            Q(achievement2__icontains=key) |
+                                            Q(achievement3__icontains=key) |
+                                            Q(achievement4__icontains=key) |
+                                            Q(achievement5__icontains=key))
 
     result_list = sorted(
         chain(qs1, qs2, qs3, qs4, qs5),
@@ -123,7 +123,10 @@ def searchUser(request):
     print(keyset)
     result = []
     for key in keyset:
-        result.append( _getUserInfo(key))
+        info = _getUserInfo(key)
+        info['skills'] = _getUserSkills(key)
+        info['interests'] = _getUserInterests(key)
+        result.append(info)
     print(result)
     return JsonResponse(result, safe=False)
 
