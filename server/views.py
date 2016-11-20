@@ -336,6 +336,31 @@ def _getProjectInterests(project_id):
 
 """ EVENT SECTION """
 
+def _getEventTech(project_id):
+    """ Returns project info """
+    print("---------------------------")
+
+    print("getting event technologies id = ", project_id)
+    tech = mod.EventTechnologies.objects.filter(project_id=int(project_id))
+    tech = serializers.serialize('json', tech,
+                                 fields=(
+                                     'project_id', 'skill1', 'skill2', 'skill3', 'skill4', 'skill5'))
+    tech = json.loads(tech)
+    result = []
+    if len(tech):
+        result = [x['fields'] for x in tech][0]
+        print(result)
+        to_delete = []
+        for key in result:
+            if result[key] == '' or key == 'project_id':
+                to_delete.append(key)
+
+        for key in to_delete:
+            result.pop(key)
+
+    print("result : ", result)
+    print("---------------------------")
+    return result
 
 """ GETTERS """
 def getLabUsers(request):
@@ -412,34 +437,13 @@ def getEvents(request):
         if len(info):
             result = [x['fields'] for x in info]
 
+        for instance in result:
+            tech = _getEventTech(instance['project_id'])
+            instance['skills'] = tech
+
         return JsonResponse(result, safe=False)
     return Http404
 
-# def _getEventInfo():
-#     """ Returns project info """
-#     print("---------------------------")
-#
-#     print("getting user interests id = ", project_id)
-#     info = mod.Project.objects.filter(project_id=int(project_id))
-#     info = serializers.serialize('json', info,
-#                                  fields=(
-#                                      'project_id', 'name', 'description', 'is_lab'))
-#     info = json.loads(info)
-#     result = []
-#     if len(info):
-#         result = [x['fields'] for x in info][0]
-#         print(result)
-#         to_delete = []
-#         for key in result:
-#             if result[key] == '' or key == 'project_id':
-#                 to_delete.append(key)
-#
-#         for key in to_delete:
-#             result.pop(key)
-#
-#     print("result : ", result)
-#     print("---------------------------")
-#     return result
 
 def compareDicts(dict_a, dict_b):
     keys_a = set(dict_a.keys())
