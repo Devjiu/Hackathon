@@ -145,7 +145,7 @@ def getLabs(request):
         return JsonResponse(result, safe=False)
     return Http404
 
-
+""" USER SECTION """
 def _getUserInfo(user_id):
     """ Returns dict of member """
     print("---------------------------")
@@ -215,6 +215,88 @@ def _getUserInterests(user_id):
     print("---------------------------")
     return result
 
+""" PROJECT SECTION """
+def _getProjectInfo(project_id):
+    """ Returns project info """
+    print("---------------------------")
+
+    print("getting user interests id = ", project_id)
+    info = mod.Project.objects.filter(member_id=int(project_id))
+    info = serializers.serialize('json', info,
+                                      fields=(
+                                      'project_id', 'name', 'description', 'is_lab'))
+    info = json.loads(info)
+    result = []
+    if len(info):
+        result = [x['fields'] for x in info][0]
+        print(result)
+        to_delete = []
+        for key in result:
+            if result[key] == '' or key == 'project_id':
+                to_delete.append(key)
+
+        for key in to_delete:
+            result.pop(key)
+
+    print("result : ", result)
+    print("---------------------------")
+    return result
+
+def _getProjectSkills(project_id):
+    """ Returns project skills """
+    print("---------------------------")
+
+    print("getting user interests id = ", project_id)
+    skills = mod.ProjectSkills.objects.filter(member_id=int(project_id))
+    skills = serializers.serialize('json', skills,
+                                      fields=(
+                                      'project_id', 'name', 'description', 'is_lab'))
+    skills = json.loads(skills)
+    result = []
+    if len(skills):
+        result = [x['fields'] for x in skills][0]
+        print(result)
+        to_delete = []
+        for key in result:
+            if result[key] == '' or key == 'project_id':
+                to_delete.append(key)
+
+        for key in to_delete:
+            result.pop(key)
+
+    print("result : ", result)
+    print("---------------------------")
+    return result
+
+
+def _getProjectInterests(project_id):
+    """ Returns project Interests """
+    print("---------------------------")
+
+    print("getting user interests id = ", project_id)
+    interests = mod.ProjectInterest.objects.filter(member_id=int(project_id))
+    interests = serializers.serialize('json', interests,
+                                      fields=(
+                                      'project_id', 'name', 'description', 'is_lab'))
+    interests = json.loads(interests)
+    result = []
+    if len(interests):
+        result = [x['fields'] for x in interests][0]
+        print(result)
+        to_delete = []
+        for key in result:
+            if result[key] == '' or key == 'project_id':
+                to_delete.append(key)
+
+        for key in to_delete:
+            result.pop(key)
+
+    print("result : ", result)
+    print("---------------------------")
+    return result
+
+
+
 def searchUser(request):
     req = dict(request.GET)
     key = list(req)[0]
@@ -247,16 +329,15 @@ def searchUser(request):
 def getLabUsers(request):
     if request.method == 'GET':
         req = dict(request.GET)
-        print(req)
+
         users = mod.Crossings.objects.filter(project_id=int(req['id'][0]))
         users = serializers.serialize('json',users, fields=('project_id', 'member_id'))
         users = json.loads(users)
-        print(users[0])
+
         result = []
         if len(users):
             users = [x['fields'] for x in users]
 
-            print(users)
             for user in users:
                 info = _getUserInfo(user['member_id'])
                 info['skills'] = _getUserSkills(user['member_id'])
@@ -264,6 +345,12 @@ def getLabUsers(request):
                 result.append(info)
 
         return JsonResponse(result, safe=False)
+    return Http404
+
+
+def getProjects(request):
+    if request.method == 'GET':
+        pass
     return Http404
 
 
